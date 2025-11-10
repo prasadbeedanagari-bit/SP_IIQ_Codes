@@ -1,0 +1,176 @@
+ <?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+
+<Rule language="beanshell"  name="Create AD Group">
+
+  <Description>
+
+Create AD Group.
+
+  </Description>
+
+  <Signature>
+
+    <Inputs>
+
+      <Argument name="log">
+
+        <Description>
+
+          The log object is associated with the SailPointContext.
+
+        </Description>
+
+      </Argument>
+
+      <Argument name="context">
+
+        <Description>
+
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+
+        </Description>
+
+      </Argument>
+
+    </Inputs>
+
+  </Signature>
+
+  <Source>
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import sailpoint.api.Provisioner;
+
+import sailpoint.object.ProvisioningPlan;
+
+import sailpoint.object.ProvisioningPlan.ObjectRequest;
+
+
+
+ObjectRequest objectRequest = new ObjectRequest();
+
+objectRequest.setOp(ProvisioningPlan.ObjectOperation.Create);
+
+objectRequest.add(new ProvisioningPlan.AttributeRequest("GroupType", ProvisioningPlan.Operation.Set, "Security"));
+
+objectRequest.add(new ProvisioningPlan.AttributeRequest("SamAccountName", ProvisioningPlan.Operation.Set, "Test"));
+
+objectRequest.setApplication("Active Directory");
+
+objectRequest.setNativeIdentity("CN=Test,ou=Groups,dc=mightypedia,dc=com");
+
+objectRequest.setType("group");
+
+
+
+List objReqList = new ArrayList();
+
+objReqList.add(objectRequest);
+
+
+
+ProvisioningPlan plan = new ProvisioningPlan();
+
+plan.setObjectRequests(objReqList);
+
+
+
+Provisioner provisioner  = new Provisioner(context);
+
+provisioner.execute(plan);
+
+ //  return plan;
+
+  </Source>
+
+</Rule>
+
+
+
+=========================================================
+
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE Custom PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+
+<Custom  name="Custom-Prasad-ADGroupsList">
+
+  <Attributes>
+
+    <Map>
+
+      <entry key="ADGroups">
+
+        <value>
+
+          <List>
+
+            <String>Test101</String>
+
+            <String>Test102</String>
+
+            <String>Test103</String>
+
+          </List>
+
+        </value>
+
+      </entry>
+
+    </Map>
+
+  </Attributes>
+
+</Custom>
+
+
+========================================================================================================================================================
+
+  import java.util.ArrayList;
+  import java.util.List;
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.Custom;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.ObjectRequest;
+  import sailpoint.tools.GeneralException;
+
+  String userDN = "";
+  String path = "ou=Groups,dc=mightypedia,dc=com";
+
+  try {
+
+    Custom custom = context.getObjectByName(Custom.class, "Custom-Prasad-ADGroupLists");
+    List ADGroups = custom.getList("ADGroups");
+
+    for(String group : ADGroups) {
+      ObjectRequest objectRequest = new ObjectRequest();
+      objectRequest.setOp(ProvisioningPlan.ObjectOperation.Create);
+      //objectRequest.add(new ProvisioningPlan.AttributeRequest("GroupType", ProvisioningPlan.Operation.Set, "Security"));
+      objectRequest.add(new ProvisioningPlan.AttributeRequest("GroupType", ProvisioningPlan.Operation.Set, "Global"));
+      objectRequest.add(new ProvisioningPlan.AttributeRequest("attribute", ProvisioningPlan.Operation.Set, "memberOf"));
+      objectRequest.add(new ProvisioningPlan.AttributeRequest("SamAccountName", ProvisioningPlan.Operation.Set, group));
+      objectRequest.setApplication("Active Directory");
+      //objectRequest.setNativeIdentity("CN=Test,ou=Groups,dc=mightypedia,dc=com");
+      userDN = "CN=" + group + "," + path;
+      objectRequest.setNativeIdentity(userDN);
+      objectRequest.setType("group");
+
+      List objReqList = new ArrayList();
+      objReqList.add(objectRequest);
+
+      ProvisioningPlan plan = new ProvisioningPlan();
+      plan.setObjectRequests(objReqList);
+      Provisioner provisioner  = new Provisioner(context);
+      provisioner.execute(plan);
+      // return plan;
+    }
+  }catch (Exception e) {
+    log.error("Error while creating AD Group : "+e.getMessage());
+  }
+
+  return "success";
