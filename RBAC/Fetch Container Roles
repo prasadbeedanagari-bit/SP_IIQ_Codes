@@ -1,0 +1,25 @@
+import java.util.ArrayList;
+import java.util.List;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Bundle;
+import sailpoint.object.Filter;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.GeneralException; 
+
+private static List getRolesBasedOnContainer() {
+		List aList = null;
+		QueryOptions qo = null;
+
+		try {
+			aList = new ArrayList();
+			qo = new QueryOptions();
+			qo.add(Filter.eq("inheritance.name", "Pedia - IT - DPA Role"));
+			List<Bundle> objects = context.getObjects(Bundle.class, qo);
+			for (Bundle bundle : objects) {
+				aList.add(bundle.getName());
+			}
+		} catch (GeneralException e) {
+			System.out.println("GeneralException : " + e.getMessage());
+		}
+		return aList;
+	}
