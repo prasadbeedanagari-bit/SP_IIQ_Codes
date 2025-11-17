@@ -1,0 +1,11 @@
+SELECT
+    b.name AS it_role_name,
+    pc.elt AS constraint_value   
+FROM
+    spt_bundle b
+JOIN
+    spt_profile p ON p.bundle_id = b.id
+JOIN
+    spt_profile_constraints pc ON pc.profile = p.id
+WHERE 
+b.name ='Pedia - IT - DPA Role';
