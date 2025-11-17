@@ -1,0 +1,27 @@
+SELECT
+
+    br.id            AS business_role_id,
+
+    br.name          AS business_role_name,
+
+    br.app_name      AS Logical_Bus_App_Name,
+
+    br.type          AS business_role_type,
+
+    it.id            AS it_role_id,
+
+    it.name          AS it_role_name,
+
+    it.app_name      AS Logical_Bus_App_Name,
+
+    it.type          AS it_role_type
+
+FROM identityiq.spt_bundle_requirements r
+
+JOIN identityiq.spt_bundle it ON it.id = r.child
+
+JOIN identityiq.spt_bundle br ON br.id = r.bundle
+
+WHERE 
+
+it.name = 'Pedia - IT - DPA Role';
