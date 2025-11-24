@@ -1,3 +1,16 @@
+SELECT
+    br.name          AS it_or_business_role_name,
+    br.type          AS it_or_business_role_type,
+    it.name          AS org_role_name,
+    it.type          AS org_type
+FROM identityiq.spt_bundle_children c
+JOIN identityiq.spt_bundle it ON it.id = c.child
+JOIN identityiq.spt_bundle br ON br.id = c.bundle
+WHERE 
+it.name = 'Pedia - IT - DPA Role';
+
+==============================================================
+
 import java.util.ArrayList;
 import java.util.List;
 import sailpoint.api.SailPointContext;
