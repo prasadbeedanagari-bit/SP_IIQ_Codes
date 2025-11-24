@@ -6,14 +6,14 @@ import sailpoint.object.Filter;
 import sailpoint.object.QueryOptions;
 import sailpoint.tools.GeneralException; 
 
-private static List getRolesBasedOnContainer() {
+private static List getRolesBasedOnContainer(String container) {
 		List aList = null;
 		QueryOptions qo = null;
 
 		try {
 			aList = new ArrayList();
 			qo = new QueryOptions();
-			qo.add(Filter.eq("inheritance.name", "Pedia - IT - DPA Role"));
+			qo.add(Filter.eq("inheritance.name", container));
 			List<Bundle> objects = context.getObjects(Bundle.class, qo);
 			for (Bundle bundle : objects) {
 				aList.add(bundle.getName());
@@ -23,3 +23,5 @@ private static List getRolesBasedOnContainer() {
 		}
 		return aList;
 	}
+String container = "Pedia - IT - DPA Role";
+List bundles = getRolesBasedOnContainer(container);
