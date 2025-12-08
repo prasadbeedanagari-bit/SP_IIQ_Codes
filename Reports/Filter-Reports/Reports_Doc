@@ -1,0 +1,27 @@
+Custom Reports:
+
+SailPoint Filter : Executes a projection query, retrieving only required data
+
+Java DataSource : Must implement the sailpoint.reporting.dataSource.JavaDataSource interface
+
+HQL DataSource : Hibernate Query Language uses persistsnt technology to communicate with IdentityIQ database
+
+
+Columns : Column Configuation
+table : Filter with Object Type (DataSource)
+Criteria : QueryOptions
+
+Query : Hard Coded
+Query Paramameters : Allows input Optional QueryScript
+
+<DataSource objectType="Identity" type="Filter">
+<Query>name=="abc.xyz"</Query>
+</DataSource>
+
+<DataSource objectType="PolicyViolation" type="Filter">
+<Query>active==true</Query>
+</DataSource>
+
+<DataSource objectType="AuditEvent" type="Filter">
+<Query>action=="login"</Query>
+</DataSource>
